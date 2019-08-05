@@ -1,7 +1,9 @@
 (ns advent-2016.core
-  (:require [advent-2016.day01 :refer [day01]])
+  (:require [advent-2016.day01 :refer [day01 day01-part2]])
   (:gen-class))
 
 (defn -main
   [& args]
-  (prn (day01)))
+  (do
+    (prn (day01))
+    (pprint (day01-part2))))

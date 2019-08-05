@@ -51,6 +51,7 @@
       :W (assoc d :x (- dst)) ; West moves left, so along the negative x axis, and so on.
       :S (assoc d :y (- dst))
       :E (assoc d :x dst)
+      :default
       )))
 
 (defn apply-delta
@@ -83,3 +84,49 @@
   []
   (absolute-distance
     (reduce move {:dir :N :x 0 :y 0} (util/get-input "01"))))
+
+
+; start with pos=(N, 0, 0), been-to=set #{}, visited=nil, instruction=(input)
+;   newPos, dist from instruction
+;   turn to newPos
+;   while dist > 0 and visited != nil:
+;     if set contains pos and visited is not nil: 
+;       visited := pos
+;     else add pos to been-to, move pos, decrement dist
+
+(defn step-foward
+  "Just moves position one forward from where they're facing"
+  [pos]
+  (apply-delta pos "x1"))
+
+
+(defn pos-to-xy
+  [pos]
+  {:x (:x pos) :y (:y pos)})
+
+
+(defn forward-with-tracing
+  "Each call to this moves the pos in the direction they're facing, while adding positions to the been set. Visited represents the first location visited twice (nil if none yet)"
+  [[pos been visited]]
+  (let [xy (pos-to-xy pos)] ; the been set only consists of the x & y coord pairs
+    (if (nil? visited)
+      ; move forward, add 
+      [(step-foward pos) (conj been xy) (if (contains? been xy) pos nil)]
+      ; else just 
+      [pos been visited])))
+
+
+(defn travel-with-tracing
+  "pos is a map of {:dir :x :y}, 
+  been is a set of previous locations
+  visited is the location first visited twice (nil of not yet)
+  inst is the instruction to execute, like 'R10' for 'turn right, then go 10"
+  [pos been visited inst]
+  (let [d (dist inst)]
+    (take (inc d)
+      (iterate forward-with-tracing
+        [(apply-turn pos inst) been visited]))))
+
+(defn day01-part2
+  []
+  (travel-with-tracing {:dir :N :x 0 :y 0} (set nil) nil "R10"))
