@@ -1,5 +1,12 @@
 ; Solves https://adventofcode.com/2016/day/1
 ; TIL: reduce has a couple of modes. Still getting familiar with it.
+
+; Position (pos) is represented as a map,
+;   with keys for :dir :x and :y (direction, x position, and y position
+; Direction is one of :N :W :S :E
+; Each instruction is kept as a string, like the input, like "R10".
+;   It stars with either "R" or "L" to turn Right or Left and is followed by a number,
+;   which is the number of steps to take.
 ;
 ; Problems:
 ; - had to write my own abs fn?
