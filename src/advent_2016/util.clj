@@ -19,3 +19,18 @@
   [day]
     (str/split (slurp-input day) #", "))
 
+(defn rcomp
+  "reverse composition, when you want to execute left-to-right"
+  [& args]
+  (apply comp (reverse args)))
+
+(defn parse-commands
+  "given a filename and a line-parser (which should turn a line into a fn) returns a "
+  [filename line-parser]
+  (->>
+   filename
+   slurp
+   clojure.string/split-lines
+   (map line-parser)
+   (apply rcomp)
+   ))
